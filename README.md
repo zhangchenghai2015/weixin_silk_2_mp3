@@ -20,3 +20,5 @@ jni用jdk 1.6，ndk版本是19或者17
 2.3.要把android.mk中的silk 的encode对应的文件都去掉注释
 
 2.4.把libmad中的调用的mad的api放到include中
+
+微信号：zch-qiuye 如有不明可以加我微信
