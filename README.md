@@ -1,4 +1,5 @@
 jni用jdk 1.6，ndk版本是19或者17
+进入jni目录执行ndk-build命令
 
 ​
 
