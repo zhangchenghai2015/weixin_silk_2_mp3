@@ -1,0 +1,81 @@
+apply plugin: 'com.android.application'
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "com.weicheng.test"
+        minSdkVersion 18
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.1.3"
+        multiDexEnabled true
+        ndk {
+            //选择对应cpu类型的.so库。
+            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file('../keystore/xwzs_prod.jks')
+            storePassword 'xwzs2018'
+            keyAlias 'xwzs_prod'
+            keyPassword 'xwzs2018'
+        }
+        debug {
+            storeFile file('../keystore/ceshi.jks')
+            storePassword '111111'
+            keyAlias 'key0'
+            keyPassword '111111'
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'BASE_URL', BASE_URL_FORMAL
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            buildConfigField 'String', 'BASE_URL', BASE_URL_TEST
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+repositories {
+    flatDir {
+        dirs 'libs' //this way we can find the .aar file in libs folder
+    }
+}
+
+
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    api project(':amrconvert')
+}
+def SDK_NAME = "AmrConvert"; //sdk的名字
+def SDK_VERSION = "_V1.0"; //版本
+def sdkDestinationPath = "build";
+def zipFile = file('build/intermediates/bundles/release/classes.jar')//注意这里的release可能是debug或者是default
+
+task deleteBuild(type: Delete) {
+    //最终生成的jar的名字
+    delete sdkDestinationPath + SDK_NAME + SDK_VERSION + ".jar"
+}
+
+task makeJar(type: Jar) {
+    from zipTree(zipFile)
+    from fileTree(dir: 'src/main',includes: ['assets/**'])
+    baseName = SDK_NAME + SDK_VERSION
+    destinationDir = file(sdkDestinationPath)
+}
+
+makeJar.dependsOn(deleteBuild, build)
