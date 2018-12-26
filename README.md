@@ -21,4 +21,4 @@ jni用jdk 1.6，ndk版本是19或者17
 
 2.4.把libmad中的调用的mad的api放到include中
 
-微信号：zch-qiuye 如有不明可以加我微信
+微信号：zch-qiuye 如有不明可以加我微信，浏览后请给个star，谢谢
